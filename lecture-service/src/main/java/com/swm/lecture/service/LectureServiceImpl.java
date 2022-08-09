@@ -25,9 +25,7 @@ public class LectureServiceImpl implements LectureService{
     @Override
     public LectureDto createLecture(LectureDto lectureDto) {
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.typeMap(LectureDto.class, LectureEntity.class).addMappings(mapper -> {
-            mapper.map(LectureDto::get)
-        })
+
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         LectureEntity lectureEntity = modelMapper.map(lectureDto, LectureEntity.class);
 
