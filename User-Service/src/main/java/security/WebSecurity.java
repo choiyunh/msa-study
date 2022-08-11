@@ -16,12 +16,9 @@ public class WebSecurity {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/user").permitAll()
+                .antMatchers("/user/**").permitAll()
                 .antMatchers("/health_check").permitAll()
                 .anyRequest().authenticated().and()
-                .formLogin().defaultSuccessUrl("/health_check")
-                .permitAll().and()
-                .logout().and()
                 .build();
     }
 }
