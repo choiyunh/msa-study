@@ -1,8 +1,8 @@
 package com.uno.userservice.service;
 
 import com.uno.userservice.dto.UserDto;
-import com.uno.userservice.jpa.UserEntity;
-import com.uno.userservice.jpa.UserRepository;
+import com.uno.userservice.model.User;
+import com.uno.userservice.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +28,9 @@ public class UserServiceImpl implements UserService {
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
-        userEntity.setEncryptedPwd(passwordEncoder.encode(userDto.getUserPassword()));
+        User user = modelMapper.map(userDto, User.class);
+        user.setEncryptedPwd(passwordEncoder.encode(userDto.getUserPassword()));
 
-        userRepository.save(userEntity);
+        userRepository.save(user);
     }
 }
