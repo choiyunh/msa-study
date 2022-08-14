@@ -1,7 +1,7 @@
 package com.uno.userservice.config.auth;
 
-import com.cos.jwtex01.model.Users;
-import com.cos.jwtex01.repository.UserRepository;
+import com.uno.userservice.model.User;
+import com.uno.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,15 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PrincipalDetailsService implements UserDetailsService {
+    private final UserRepository userRepository;
 
-	private final UserRepository userRepository;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("PrincipalDetailsService : 진입");
+        User user = userRepository.findByEmail(username);
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		System.out.println("PrincipalDetailsService : 진입");
-		Users user = userRepository.findByUsername(username);
-
-		// session.setAttribute("loginUser", user);
-		return new PrincipalDetails(user);
-	}
+        // session.setAttribute("loginUser", user);
+        return new PrincipalDetails(user);
+    }
 }

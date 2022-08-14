@@ -9,10 +9,8 @@ public class RequestUser {
     @NotNull(message = "Email cna not be null")
     private String email;
 
-    @NotNull(message = "Name can not be null")
-    private String nickname;
-
     @NotNull(message = " Password can not be null")
     private String password;
-
+    @NotNull(message = "Name can not be null")
+    private String nickname;
 }

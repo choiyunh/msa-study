@@ -24,12 +24,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(UserDto userDto) {
-        userDto.setUserId(UUID.randomUUID().toString());
+        userDto.setUuid(UUID.randomUUID().toString());
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         User user = modelMapper.map(userDto, User.class);
-        user.setEncryptedPwd(passwordEncoder.encode(userDto.getUserPassword()));
+        user.setEncryptedPwd(passwordEncoder.encode(userDto.getPassword()));
+        user.setRoles("ROLE_USER");
 
         userRepository.save(user);
     }

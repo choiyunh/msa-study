@@ -35,19 +35,15 @@ public class SecurityConfig {
                 .and()
                 .formLogin().disable()
                 .httpBasic().disable()
-                .apply(new MyCustomDsl()) // 커스텀 필터 등록
+                .apply(new CustomDsl())
                 .and()
-                .authorizeRequests(authroize -> authroize.antMatchers("/api/v1/user/**")
-                        .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                        .antMatchers("/api/v1/manager/**")
-                        .access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                        .antMatchers("/api/v1/admin/**")
-                        .access("hasRole('ROLE_ADMIN')")
+                .authorizeRequests(authorize -> authorize.antMatchers("/main/**")
+                        .access("hasRole('ROLE_USER')")
                         .anyRequest().permitAll())
                 .build();
     }
 
-    public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
+    public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
