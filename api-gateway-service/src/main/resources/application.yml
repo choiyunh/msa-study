@@ -26,9 +26,9 @@ spring:
             - Path=/user-service/**
           filters:
             - CustomFilter
-        - id: second-service
-          uri: lb://SECOND-SERVICE
+        - id: catalog-service
+          uri: lb://CATALOG-SERVICE
           predicates:
-            - Path=/second-service/**
+            - Path=/catalog-service/**
           filters:
             - CustomFilter
