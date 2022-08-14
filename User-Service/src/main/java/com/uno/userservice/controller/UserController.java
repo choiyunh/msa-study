@@ -49,7 +49,7 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<List<ResponseUser>> getUsers() {
-        Iterable<User> users = userService.getUserByAll();
+        Iterable<User> users = userService.getAllUsers();
 
         List<ResponseUser> result = new ArrayList<>();
         users.forEach(v ->
