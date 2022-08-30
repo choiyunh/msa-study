@@ -1,11 +1,10 @@
 package com.uno.userservice.service;
 
 import com.uno.userservice.dto.UserDto;
+import com.uno.userservice.mapper.UserMapper;
 import com.uno.userservice.model.User;
 import com.uno.userservice.repository.UserRepository;
 import com.uno.userservice.vo.ResponseOrder;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,9 +29,7 @@ public class UserServiceImpl implements UserService {
     public void createUser(UserDto userDto) {
         userDto.setUuid(UUID.randomUUID().toString());
 
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        User user = modelMapper.map(userDto, User.class);
+        User user = UserMapper.INSTANCE.dtoToEntity(userDto);
         user.setEncryptedPwd(passwordEncoder.encode(userDto.getPassword()));
         user.setRoles("ROLE_USER");
 
@@ -46,7 +43,7 @@ public class UserServiceImpl implements UserService {
         if (user == null)
             throw new UsernameNotFoundException("User not found");
 
-        UserDto userDto = new ModelMapper().map(user, UserDto.class);
+        UserDto userDto = UserMapper.INSTANCE.entityToDto(user);
 
         List<ResponseOrder> orders = new ArrayList<>();
         userDto.setOrders(orders);

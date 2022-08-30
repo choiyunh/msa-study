@@ -1,10 +1,9 @@
 package com.uno.userservice.controller;
 
 import com.uno.userservice.dto.UserDto;
+import com.uno.userservice.mapper.UserMapper;
 import com.uno.userservice.model.User;
 import com.uno.userservice.vo.ResponseUser;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -36,13 +35,10 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser user) {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        UserDto userDto = modelMapper.map(user, UserDto.class);
+        UserDto userDto = UserMapper.INSTANCE.requestToDto(user);
         userService.createUser(userDto);
 
-        ResponseUser responseUser = modelMapper.map(userDto, ResponseUser.class);
+        ResponseUser responseUser = UserMapper.INSTANCE.dtoToResponse(userDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
     }
@@ -52,9 +48,9 @@ public class UserController {
         Iterable<User> users = userService.getAllUsers();
 
         List<ResponseUser> result = new ArrayList<>();
-        users.forEach(v ->
-            result.add(new ModelMapper().map(v, ResponseUser.class)));
-
+        users.forEach(v -> {
+            result.add(UserMapper.INSTANCE.entityToResponse(v));
+        });
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -63,7 +59,7 @@ public class UserController {
     public ResponseEntity<ResponseUser> getUser(@PathVariable("uuid") String uuid) {
         UserDto userDto = userService.getUserByUuid(uuid);
 
-        ResponseUser result = new ModelMapper().map(userDto, ResponseUser.class);
+        ResponseUser result = UserMapper.INSTANCE.dtoToResponse(userDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
